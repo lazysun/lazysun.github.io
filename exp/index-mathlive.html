@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<!--  <link-->
+<!--      rel="stylesheet"-->
+<!--      href="https://unpkg.com/mathlive/dist/mathlive.core.css"-->
+<!--  />-->
+<!--  <link-->
+<!--      rel="stylesheet"-->
+<!--      href="https://unpkg.com/mathlive/dist/mathlive.css"-->
+<!--  />-->
+</head>
+<body>
+<div id="mf" style="font-size: 3rem;font-family: 'Times New Roman, Symbola, serif'"; data-command='["applyStyle",{"color":"#cc2428"}]'>f(x)=</div>
+<script src="https://unpkg.com/mathlive/dist/mathlive.js"></script>
+<!--<script src="./mathlive.js"></script>-->
+<script type="module">
+  // import MathLive from './mathlive.mjs';
+  // import Core from 'https://unpkg.com/mathlive/dist/core.d.ts';
+  const mf = MathLive.makeMathField('mf', {
+    fontsize: 100,
+    onContentDidChange: (mf) => {
+      console.log(mf.$text());
+    },
+
+  });
+  mf.$applyStyle({"color":"#cc2428"});
+  // console.log(Core);
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" href="../static/css/bootstrap.css">
+<link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"
+      href="../static/css/bootstrap-grid.css">
+<link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"
+      href="../static/css/bootstrap-reboot.css">
+<link th:href="@{/css/jquery-ui.css}" rel="stylesheet" href="../static/css/jquery-ui.css">
+<link th:href="@{/css/jquery-ui.structure.css}" rel="stylesheet"
+      href="../static/css/jquery-ui.structure.css">
+<link th:href="@{/css/jquery-ui.theme.css}" rel="stylesheet"
+      href="../static/css/jquery-ui.theme.css">
+<link th:href="@{/css/assistant.css}" rel="stylesheet" href="../static/css/assistant.css">
+<!-- The below is required for font awesome font may not be required-->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- The below is required for Google Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+</head>
+
+
+<body>
+<div class="container-fluid">
+  <div class="row">
+
+
+<!--    first column -->
+    <div class="col-2">
+      <!--Search box -->
+      <div class="searchbox">
+        <div class="search">
+          <input type="text" class="searchTerm" placeholder="Search for images and objects">
+          <button type="submit" class="searchButton">
+            <i class="material-icons">search</i>
+          </button>
+        </div>
+      </div>
+      <div class="searchresults">
+      </div>
+
+
+    </div>
+
+<!--    Middle Column-->
+    <div class="col-10" style="height:100vh;">
+      <div class="container-fluid">
+        <div class="row" style="height: 80vh; ">
+          <div class="col">
+            <canvas id="myCanvas" resize style="height: 100%;width: 100%"></canvas>
+
+            <div class="side-tool-panel">
+              <ul>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">pan_tool</i>
+                  </div>
+                </li>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">fingerprint</i>
+                  </div>
+                </li>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">trending_flat</i>
+                  </div>
+                </li>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">border_clear</i>
+                  </div>
+                </li>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">call_made</i>
+                  </div>
+                </li>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">add_circle_outline</i>
+                  </div>
+                </li>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">highlight</i>
+                  </div>
+                </li>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">text_fields</i>
+                  </div>
+                </li>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">undo</i>
+                  </div>
+                </li>
+                <li>
+                  <div class="icon-container">
+                    <i class="material-icons">redo</i>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+
+
+          </div>
+        </div>
+
+        <div class="row" style="height:20vh">
+          <div class="col query">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- All the 3p scripts tag goes here -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script th:src="@{/js/database.js}" src="../static/js/database.js"></script>
+<script th:src="@{/js/jquery-ui.js}" src="../static/js/jquery-ui.js"></script>
+<script th:src="@{/js/paper-full.js}" src="../static/js/paper-full.js"></script>
+<script th:src="@{/js/bootstrap.js}" src="../static/js/bootstrap.js"></script>
+<script th:src="@{/js/bootstrap.bundle.js}" src="../static/js/bootstrap.bundle.js"></script>
+
+<!--All the 1st party script code goes here -->
+<script th:src="@{/js/paper-canvas-direct.js}" type="text/javascript" canvas="myCanvas"
+        src="../static/js/paper-image.js"></script>
+<!--<script type="text/paperscript" src="../static/js/paper-canvas.js" canvas="myCanvas"></script>-->
+
+<!-- All the inline script code goes here-->
+<script>
+
+
+  // Storage options
+  if (typeof (Storage) !== "undefined") {
+    console.log("Webstorage supported");
+    localStorage.setItem("alldata", JSON.stringify(getAllData()));
+  } else {
+    console.log("No Webstorage support");
+  }
+  var alldata = JSON.parse(localStorage.getItem("alldata"));
+  console.log("getAllData " + alldata[0].description);
+
+  var imageUrl = "https://i.imgur.com/FY6a4Yv.jpg";
+
+  $(".searchButton").click(function () {
+    $.each(alldata, function (index, value) {
+      var styleStr = "background-image:url(\"" + value.imageUrl + "\")";
+      $(".searchresults").append("<div class='results-container'><div style='" + styleStr
+          + "'   class='image-ext '> </div> <div class='text-ext'>" + value.description
+          + "</div></div>");
+    });
+  });
+  // alert(localStorage.getItem("alldata").description);
+  //
+  // var imageUrl = "../static/images/dime.png";
+
+  $(".btn-dime").css("background-size", "100px 100px");
+  $(".btn-dime").css("background-image", "url(" + imageUrl + ")");
+  $(function () {
+    $(".my-drag").draggable({
+      helper: "clone"
+    });
+    $("#myCanvas").droppable({
+      drop: function (event, ui) {
+        var url = $(ui.draggable).first().children().css('background-image');
+        var tempParts = url.split('\"');
+        var currentImage = tempParts[1];
+        $("#myCanvas").css("background-image", url);
+        var canvas = document.getElementById('myCanvas');
+
+        $("#myCanvas").css("background-size", "933px 620px");
+        $("#myCanvas").css("background-position", "center");
+        $("#myCanvas").css("background-repeat", "no-repeat");
+        console.log("drop event happend " + ui);
+      }
+    });
+  });
+  var state = 0;
+  $("#myCanvas").mousedown(function () {
+    state = 1;
+    console.log("Mousedown function on canvas called");
+  });
+  $("#myCanvas").mouseup(function (event) {
+    console.log(event);
+    console.log("Mouseup function on canvas called");
+    if (state == 0) {
+      console.log("Maybe drag happened ");
+    }
+    state = 0;
+  });
+  $(".searchTerm").focusin(function () {
+    $(".searchbox").css('background-color', '#ffffff');
+    console.log("Search button clicked focusin");
+  });
+  $(".searchTerm").focusout(function () {
+    $(".searchbox").css('background-color', '#f4f6f8');
+    console.log("Search button  focusout");
+  });
+
+</script>
+</body>
+</html>

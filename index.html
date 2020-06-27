@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="google" content="notranslate">
-  <title>Curious</title>
+  <title>Curious U</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -30,9 +30,11 @@
 </head>
 
 <body style="overflow: hidden">
+<!--<body>-->
 <div class="container-fluid">
   <div class="row">
-    <canvas id="myCanvas" resize style="height: 100vh;width: 100vw"></canvas>
+    <canvas id="secondCanvas" resize style="height: 100vh;width: 100vw;z-index:-2;position: absolute;background-color: #f8d7da"></canvas>
+    <canvas id="myCanvas" resize style="height: 100vh;width: 100vw;z-index: 10;background-color: white"></canvas>
 
 
     <!--Search box -->
@@ -70,56 +72,56 @@
             <i class="material-icons">highlight</i>
           </div>
         </li>
-<!--        <li>-->
-<!--          <div id="clear_grid_command" class="icon-container">-->
-<!--            <i class="material-icons">border_clear</i>-->
-<!--          </div>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <div class="icon-container">-->
-<!--            <i class="material-icons">call_made</i>-->
-<!--          </div>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <div class="icon-container">-->
-<!--            <i class="material-icons">add_circle_outline</i>-->
-<!--          </div>-->
-<!--        </li>-->
+        <!--        <li>-->
+        <!--          <div id="clear_grid_command" class="icon-container">-->
+        <!--            <i class="material-icons">border_clear</i>-->
+        <!--          </div>-->
+        <!--        </li>-->
+                <li>
+                  <div id="pdf_viewer" class="icon-container">
+                    <i class="material-icons">picture_as_pdf</i>
+                  </div>
+                </li>
+        <!--        <li>-->
+        <!--          <div class="icon-container">-->
+        <!--            <i class="material-icons">add_circle_outline</i>-->
+        <!--          </div>-->
+        <!--        </li>-->
 
-<!--        <li>-->
-<!--          <div class="icon-container">-->
-<!--            <i class="material-icons">text_fields</i>-->
-<!--          </div>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <div class="icon-container">-->
-<!--            <i class="material-icons">undo</i>-->
-<!--          </div>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <div class="icon-container">-->
-<!--            <i class="material-icons">undo</i>-->
-<!--          </div>-->
-<!--        </li>-->
+        <!--        <li>-->
+        <!--          <div class="icon-container">-->
+        <!--            <i class="material-icons">text_fields</i>-->
+        <!--          </div>-->
+        <!--        </li>-->
+        <!--        <li>-->
+        <!--          <div class="icon-container">-->
+        <!--            <i class="material-icons">undo</i>-->
+        <!--          </div>-->
+        <!--        </li>-->
+        <!--        <li>-->
+        <!--          <div class="icon-container">-->
+        <!--            <i class="material-icons">undo</i>-->
+        <!--          </div>-->
+        <!--        </li>-->
       </ul>
     </div>
 
     <!--   start of bottom panel-->
-<!--    <div class="bottom-panel">-->
-<!--      <ul>-->
-<!--        <li>-->
-<!--          <div id="previous" class="icon-container">-->
-<!--            <i class="material-icons">navigate_before</i>-->
-<!--          </div>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <div id="next" class="icon-container">-->
-<!--            <i class="material-icons">navigate_next</i>-->
-<!--          </div>-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </div>-->
-<!--    end of bottom panel-->
+        <div class="bottom-panel" style="display: none">
+          <ul>
+            <li>
+              <div id="previous" class="icon-container">
+                <i class="material-icons">navigate_before</i>
+              </div>
+            </li>
+            <li>
+              <div id="next" class="icon-container">
+                <i class="material-icons">navigate_next</i>
+              </div>
+            </li>
+          </ul>
+        </div>
+    <!--    end of bottom panel-->
 
   </div>
 </div>
@@ -128,6 +130,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/systemjs/dist/system.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.4.456/build/pdf.min.js"></script>
 <script th:src="@{/js/database.js}" src="./static/js/database.js"></script>
 <script th:src="@{/js/jquery-ui.js}" src="./static/js/jquery-ui.js"></script>
 <script th:src="@{/js/paper-full.js}" src="./static/js/paper-full.js"></script>
@@ -153,29 +156,32 @@
 
   tippy('#free_hand_mode', {
     content: 'Free hand drawing!',
-    placement:'right',
-    offset:[0, 20],
+    placement: 'right',
+    offset: [0, 20],
   });
 
   tippy('#straight_lines_mode', {
     content: 'Draw Straight Lines!',
-    placement:'right',
-    offset:[0, 20],
+    placement: 'right',
+    offset: [0, 20],
   });
 
   tippy('#select_mode', {
     content: 'Select objects and move around or delete!',
-    placement:'right',
-    offset:[0, 20],
+    placement: 'right',
+    offset: [0, 20],
   });
 
   tippy('#highlight_mode', {
     content: 'Highlight area!',
-    placement:'right',
-    offset:[0, 20],
+    placement: 'right',
+    offset: [0, 20],
   });
 
-
+  $(document).bind('pagination', function (event, pageInfo) {
+    console.log("Hurray  " + pageInfo);
+    $(".bottom-panel").css('display','block');
+  })
 
 </script>
 
@@ -185,7 +191,6 @@
 
   currentConfig.selectedMode = Modes.FREEHAND_MODE;
   $("#free_hand_mode").addClass("active");
-
 
   $(".icon-container").click(function () {
     $(".icon-container").removeClass('active');
@@ -220,20 +225,18 @@
     $(document).trigger('mode_changed', currentConfig.mode);
   });
 
-  $("#next").click(function () {
+  $("#pdf_viewer").click(function () {
+    // currentConfig.mode = modes.SELECT_MODE;
+    // currentConfig.selectedMode = Modes.SELECTION_MODE;
+    console.log("select mode selected");
+    $(document).trigger('pdf_viewer', 'monday_phonics_week_10.pdf');
+  });
 
-    console.log("Is paper available here " + paper);
-    paper.activeLayer.removeChildren();
-    paper.view.draw();
-    // paper.clear();
-    // determine next exist
-    // irrespecive  save the current canvas.
-    // then clear the current canvas
-    // if next exist redraw the next
+  $("#next").click(function () {
+    $(document).trigger('next_page');
   })
   $("#previous").click(function () {
-    // determine previous exist
-    // if not then save the current canvas. then clear the current canvas
+    $(document).trigger('previous_page');
   })
 
   // Storage options
@@ -249,6 +252,9 @@
   var imageUrl = "https://i.imgur.com/FY6a4Yv.jpg";
 
   $(".searchButton").click(function () {
+    let command = $('.searchTerm').val();
+    console.log("Command executed : " + command);
+    $(document).trigger('command', command);
     $.each(alldata, function (index, value) {
       var styleStr = "background-image:url(\"" + value.imageUrl + "\")";
       $(".searchresults").append("<div class='results-container'><div style='" + styleStr
@@ -302,6 +308,8 @@
     $(".searchbox").css('background-color', '#f4f6f8');
     console.log("Search button  focusout");
   });
+
+
 
 </script>
 </body>

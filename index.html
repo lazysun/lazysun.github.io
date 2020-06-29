@@ -122,6 +122,12 @@
           </ul>
         </div>
     <!--    end of bottom panel-->
+    
+<!--   start of text area -->
+    <div class="edit-text" style="display:none;">
+      <div id="mf" style="font-size: 3rem;font-family: 'Times New Roman, Symbola, serif';min-width: 100px"; data-command='["applyStyle",{"color":"#cc2428"}]'></div>
+    </div>
+<!--    end of text area-->
 
   </div>
 </div>
@@ -138,6 +144,7 @@
 <script th:src="@{/js/bootstrap.bundle.js}" src="./static/js/bootstrap.bundle.js"></script>
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
+<script src="https://unpkg.com/mathlive/dist/mathlive.js"></script>
 
 <script>
   <!--All the defaults and constants goes here-->
@@ -191,6 +198,42 @@
 
   currentConfig.selectedMode = Modes.FREEHAND_MODE;
   $("#free_hand_mode").addClass("active");
+  import MathLive from 'https://unpkg.com/mathlive/dist/mathlive.mjs';
+  import {Config} from './static/ts/config.js';
+  // import MathField from 'https://unpkg.com/mathlive/dist/mathlive.mjs';
+
+  let config = new Config();
+
+  $('#myCanvas').dblclick(function (event, eventData) {
+    currentConfig.mode = modes.EDIT_MATH;
+    currentConfig.selectedMode = Modes.TEXT_EDIT;
+    $(document).trigger('mode_changed', currentConfig.mode);
+    console.log("Double Click @  points : " + event);
+    $(".edit-text").css('display','block');
+    $(".edit-text").css('top',event.clientY);
+    $(".edit-text").css('left',event.clientX);
+    $(".icon-container").removeClass('active');
+
+    if(config.isMathliveEnabledForTextMode()) {
+      const mf = MathLive.makeMathField('mf', {
+        fontsize: 100,
+        // placeholder:'Type text here',
+        onContentDidChange: (mf) => {
+          console.log("content changed");
+        },
+
+      });
+      let insertOptions = {placeholder: 'Type Text here'};
+      mf.$insert('Type here', insertOptions);
+    }else {
+
+    }
+
+    $('.edit-text').focusout(function () {
+      console.log('mathfield focus out');
+    });
+
+  });
 
   $(".icon-container").click(function () {
     $(".icon-container").removeClass('active');

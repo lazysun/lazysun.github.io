@@ -252,3 +252,16 @@
   margin: auto;
   position: absolute;
 }
+
+
+/*style for edit text*/
+.edit-text {
+  position: absolute;
+  z-index: 10;
+  background-color: transparent;
+  border-radius: 6px;
+  border-style: dashed;
+  border-color:#8d9bac ;
+  padding:10px;
+  border-width: 1px;
+}

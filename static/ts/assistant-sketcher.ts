@@ -31,6 +31,7 @@ export class AssistantSketcher {
           strokeColor: Defaults.redStrokeColor,
           strokeWidth: Defaults.shapeStrokeWidth
         });
+        circle.bounds.selected = true;
         break;
       case GeoObjects.RECTANGLE:
         //@ts-ignore

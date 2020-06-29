@@ -12,6 +12,7 @@ import {Defaults} from '../defaults.js';
 import Group = paper.Group;
 import Item = paper.Item;
 import Rectangle = paper.Path.Rectangle;
+import Size = paper.Size;
 
 export class SelectionMode implements AssistantMode {
 
@@ -21,6 +22,7 @@ export class SelectionMode implements AssistantMode {
   selectionRectangle: Path | null = null;
   selectionGroup: Group | null = null;
   selectionRectMode :boolean = false;
+  selectionRectGroup:Group|null = null;
 
   onMouseDown(state: Assistant.State, event: paper.Event): void {
     // @ts-ignore
@@ -151,10 +153,7 @@ export class SelectionMode implements AssistantMode {
   }
 
   private _resetSelectionRect(startingPoint:Point , endPoint:Point, pad:boolean) {
-    if (this.selectionRectangle) {
-      this.selectionRectangle.remove();
-    }
-
+   this._removeSelectionRectangle();
     let x = Math.min(startingPoint.x, endPoint.x);
     let y = Math.min(startingPoint.y, endPoint.y)
     let mx = Math.max(startingPoint.x, endPoint.x);
@@ -191,8 +190,52 @@ export class SelectionMode implements AssistantMode {
       // @ts-ignore
       fillColor: new Color('rgba(255, 255, 0, 0.00001)')
     });
+    this.selectionRectGroup = new Group();
+    this.selectionRectGroup.addChild(this.selectionRectangle);
+    if(pad) {
+      // @ts-ignore
+      // this.selectionRectangle.bounds.selected = true;
+      // @ts-ignore
+      this._addHandles(this.selectionRectangle.bounds);
+    }
     this.selectionRectangle.name = 'selectionRectangle';
   }
+
+
+
+  // @ts-ignore
+  private _addHandles(rect:Rectangle):void {
+    // @ts-ignore
+    let handles = [rect.topLeft, rect.topRight, rect.topCenter,rect.bottomLeft, rect.bottomCenter, rect.bottomRight, rect.leftCenter, rect.rightCenter];
+    // @ts-ignore
+    const selectionRectangle = this.selectionRectangle;
+    const selectionRectGroup = this.selectionRectGroup;
+    const selectionGroup = this.selectionGroup;
+    handles.forEach(function(midpoint) {
+      // @ts-ignore
+      let handle = new Path.Rectangle(midpoint.subtract(5), new Size(10,10));
+      // @ts-ignore
+      if(selectionRectGroup) {
+        selectionRectGroup.addChild(handle);
+      }
+      const midpointt = midpoint;
+      // @ts-ignore
+      handle.onMouseDrag = function (event) {
+        // @ts-ignore
+        selectionRectGroup.scale(3,1);
+
+
+        // @ts-ignore
+        selectionGroup.scale(3,1);
+        // @ts-ignore
+
+      };
+      // @ts-ignore
+      handle.fillColor = Defaults.lightGreyColor
+    });
+  }
+
+
 
   private _isPointInsideSelectionRect(point: Point): boolean {
     if (this.selectionRectangle == null ||
@@ -238,9 +281,17 @@ export class SelectionMode implements AssistantMode {
       this.selectionGroup.remove();
       this.selectionGroup = null;
     }
-    if(this.selectionRectangle) {
+   this._removeSelectionRectangle();
+  }
+
+  private _removeSelectionRectangle():void {
+    if (this.selectionRectangle) {
       this.selectionRectangle.remove();
       this.selectionRectangle = null;
+    }
+    if(this.selectionRectGroup) {
+      this.selectionRectGroup.remove();
+      this.selectionRectGroup = null;
     }
   }
 

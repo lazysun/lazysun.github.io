@@ -8,4 +8,13 @@ export class Config {
         }
         return false;
     }
+    isVisualizationEnabledByDefault() {
+        return true;
+    }
+    getMaxNumforVisualization() {
+        return 20;
+    }
+    isVisualizationShared() {
+        return true;
+    }
 }

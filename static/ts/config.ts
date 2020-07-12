@@ -8,4 +8,16 @@ export class Config {
     }
     return false;
   }
+
+  public isVisualizationEnabledByDefault():boolean {
+    return true;
+  }
+
+  public getMaxNumforVisualization():number {
+    return 20;
+  }
+
+  public isVisualizationShared():boolean {
+    return true;
+  }
 }

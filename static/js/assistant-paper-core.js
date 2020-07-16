@@ -5,6 +5,9 @@ import {AssistantState} from "../ts/assistant-state.js"
 import {ModeDelegator} from '../ts/modes/mode-delegator.js';
 import {AssistantSketcher} from '../ts/assistant-sketcher.js';
 import {PdfFrame} from '../ts/pdf-frame.js';
+import {KeyHandler} from '../ts/handler/key-handler.js';
+import {Context} from '../ts/context.js';
+import {Modes} from '../ts/modes/modes.js';
 
 export const debug = false;
 const assistantPaperUtil = new AssistantPaperUtil();
@@ -16,10 +19,14 @@ window.onload = function () {
   paper.setup('myCanvas');
 
   var tool = new Tool();
-  var currentState = new AssistantState();
-  let delegator = new ModeDelegator();
+
+  var context = new Context();
+  var currentState = context.getCurrentState();
+  let delegator = new ModeDelegator(context);
   let assistantSketcher = new AssistantSketcher();
+  let keyHandler = new KeyHandler(context, delegator);
   let pdfFrame = new PdfFrame();
+  context.setMode(Modes.FREEHAND_MODE);
 
   tool.onMouseDown = function (event) {
     // can make a new state object too
@@ -28,7 +35,8 @@ window.onload = function () {
         currentState.initialRawPoint);
 
     if (currentConfig.mode == modes.HIGHLIGHT) {
-      HighLightMode.onMouseDown(currentState, event);
+      delegator.getModeDelegator(currentConfig.selectedMode).onMouseDown(
+          currentState, event);
     } else if (currentConfig.mode == modes.LINES) {
       LineMode.omMouseDown(currentState, event);
     } else if (currentConfig.mode == modes.FREE_HAND) {
@@ -47,7 +55,8 @@ window.onload = function () {
       console.log("Mouse drag event fired " + event);
     }
     if (currentConfig.mode == modes.HIGHLIGHT) {
-      HighLightMode.onMouseDrag(currentState, event);
+      delegator.getModeDelegator(currentConfig.selectedMode).onMouseDrag(
+          currentState, event);
     } else if (currentConfig.mode == modes.LINES) {
       LineMode.onMouseDrag(currentState, event);
     } else if (currentConfig.mode == modes.FREE_HAND) {
@@ -64,7 +73,8 @@ window.onload = function () {
       console.log("Mouse up event fired " + event);
     }
     if (currentConfig.mode == modes.HIGHLIGHT) {
-      HighLightMode.onMouseUp(currentState, event);
+      delegator.getModeDelegator(currentConfig.selectedMode).onMouseUp(
+          currentState, event);
     } else if (currentConfig.mode == modes.LINES) {
       LineMode.onMouseUp(currentState, event);
     } else if (currentConfig.mode == modes.FREE_HAND) {
@@ -81,20 +91,21 @@ window.onload = function () {
     if (debug) {
       console.log("This key was pressed " + event.key);
     }
-    if (currentConfig.mode == modes.HIGHLIGHT) {
-      HighLightMode.onKeyDown(currentState, event);
-    } else if (currentConfig.mode == modes.FREE_HAND) {
-      delegator.getModeDelegator(currentConfig.selectedMode).onKeyDown(
-          currentState, event);
-    } else if (currentConfig.mode == modes.SELECT_MODE) {
-      delegator.getModeDelegator(currentConfig.selectedMode).onKeyDown(
-          currentState, event);
-    }
+    // delegator.getModeDelegator(currentConfig.selectedMode).onKeyDown(
+    //     currentState, event);
+    keyHandler.onKeyDown(event);
   }
 
   $(document).bind('mode_changed', function (event, selectedMode) {
     console.log("Mode Changed " + selectedMode);
     HighLightMode.omMenuChanged(currentState, selectedMode);
+  });
+
+  $(document).bind('mode_changed_v2', function (event, modeObj) {
+    console.log("Mode Changed v2 : prev " + modeObj.prev);
+    console.log("Mode Changed v2 : prev " + modeObj.next);
+    delegator.getModeDelegator(modeObj.prev).onModeChanged(currentState, modeObj.next);
+    context.setMode(modeObj.next);
   });
 
   $(document).bind('command', function (event, command) {
@@ -137,7 +148,7 @@ window.onload = function () {
     });
   });
 
-  if (currentConfig.showGrid) {
+  if (context.getSettings().getConfig().isGridEnabled()) {
     assistantPaperUtil.drawGrid();
   }
 

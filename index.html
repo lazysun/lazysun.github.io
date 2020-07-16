@@ -34,8 +34,10 @@
 <!--<body>-->
 <div class="container-fluid">
   <div class="row">
-    <canvas id="secondCanvas" resize style="height: 100vh;width: 100vw;z-index:-2;position: absolute;background-color: #f8d7da"></canvas>
-    <canvas id="myCanvas" resize style="height: 100vh;width: 100vw;z-index: 10;background-color: white"></canvas>
+    <canvas id="secondCanvas" resize
+            style="height: 100vh;width: 100vw;z-index:-2;position: absolute;background-color: #f8d7da"></canvas>
+    <canvas id="myCanvas" resize
+            style="height: 100vh;width: 100vw;z-index: 10;background-color: white"></canvas>
 
 
     <!--Search box -->
@@ -78,11 +80,11 @@
         <!--            <i class="material-icons">border_clear</i>-->
         <!--          </div>-->
         <!--        </li>-->
-                <li>
-                  <div id="pdf_viewer" class="icon-container">
-                    <i class="material-icons">picture_as_pdf</i>
-                  </div>
-                </li>
+        <li>
+          <div id="pdf_viewer" class="icon-container">
+            <i class="material-icons">picture_as_pdf</i>
+          </div>
+        </li>
         <!--        <li>-->
         <!--          <div class="icon-container">-->
         <!--            <i class="material-icons">add_circle_outline</i>-->
@@ -108,27 +110,29 @@
     </div>
 
     <!--   start of bottom panel-->
-        <div class="bottom-panel" style="display: none">
-          <ul>
-            <li>
-              <div id="previous" class="icon-container">
-                <i class="material-icons">navigate_before</i>
-              </div>
-            </li>
-            <li>
-              <div id="next" class="icon-container">
-                <i class="material-icons">navigate_next</i>
-              </div>
-            </li>
-          </ul>
-        </div>
-    <!--    end of bottom panel-->
-    
-<!--   start of text area -->
-    <div class="edit-text" style="display:none;">
-      <div id="mf" style="font-size: 3rem;font-family: 'Times New Roman, Symbola, serif';min-width: 100px"; data-command='["applyStyle",{"color":"#cc2428"}]'></div>
+    <div class="bottom-panel" style="display: none">
+      <ul>
+        <li>
+          <div id="previous" class="icon-container">
+            <i class="material-icons">navigate_before</i>
+          </div>
+        </li>
+        <li>
+          <div id="next" class="icon-container">
+            <i class="material-icons">navigate_next</i>
+          </div>
+        </li>
+      </ul>
     </div>
-<!--    end of text area-->
+    <!--    end of bottom panel-->
+
+    <!--   start of text area -->
+    <div class="edit-text" style="display:none;">
+      <div id="mf"
+           style="font-size: 3em;font-family: 'Times New Roman, Symbola, serif';min-width: 100px" ;
+           data-command='["applyStyle",{"color":"#cc2428"}]'></div>
+    </div>
+    <!--    end of text area-->
 
   </div>
 </div>
@@ -190,7 +194,7 @@
 
   $(document).bind('pagination', function (event, pageInfo) {
     console.log("Hurray  " + pageInfo);
-    $(".bottom-panel").css('display','block');
+    $(".bottom-panel").css('display', 'block');
   })
 
 </script>
@@ -207,44 +211,77 @@
 
   let config = new Config();
 
-  $('#myCanvas').dblclick(function (event, eventData) {
-    currentConfig.mode = modes.EDIT_MATH;
-    currentConfig.selectedMode = Modes.TEXT_EDIT;
-    $(document).trigger('mode_changed', currentConfig.mode);
-    console.log("Double Click @  points : " + event);
-    $(".edit-text").css('display','block');
-    $(".edit-text").css('top',event.clientY);
-    $(".edit-text").css('left',event.clientX);
-    $(".icon-container").removeClass('active');
+  if (config.isTextModeEnabledOnDblClick()) {
+    $('#myCanvas').dblclick(function (event, eventData) {
+      console.log("  ---------- canvas double clicked called");
+      currentConfig.mode = modes.EDIT_MATH;
+      currentConfig.selectedMode = Modes.TEXT_EDIT;
+      $(document).trigger('mode_changed', currentConfig.mode);
+      console.log("Double Click @  points : " + event);
+      $(".edit-text").css('display', 'block');
+      $(".edit-text").css('top', event.clientY);
+      $(".edit-text").css('left', event.clientX);
+      $(".icon-container").removeClass('active');
 
-    if(config.isMathliveEnabledForTextMode()) {
-      const mf = MathLive.makeMathField('mf', {
-        fontsize: 100,
-        // placeholder:'Type text here',
-        onContentDidChange: (mf) => {
-          console.log("content changed");
-        },
+      if (config.isMathliveEnabledForTextMode()) {
+        const mf = MathLive.makeMathField('mf', {
+          fontsize: 100,
+          // placeholder:'Type text here',
+          onContentDidChange: (mf) => {
+            console.log("content changed");
+          },
+
+        });
+        let insertOptions = {placeholder: 'Type Text here'};
+        mf.$insert('Type here', insertOptions);
+      } else {
+        $("#mf").attr('contenteditable', 'true');
+
+        // $(".edit-text").attr('contenteditable', 'true');
+      }
+
+      $('#mf').focusout(function () {
+        console.log('mathfield focus out');
+        let y = parseInt($(".edit-text").css('top'), 10);
+        let x = parseInt($(".edit-text").css('left'), 10);
+        let width = parseInt($(".edit-text").css('width'), 10);
+        let height = parseInt($(".edit-text").css('height'), 10);
+        console.log("TextField : point x: " + x + " ,y : " + y + " width:" + width + "  , height:"
+            + height);
+        console.log(
+            "TextField : point " + new Point(x, y) + " size : " + new paper.Size(width, height));
+        console.log("PointText : Value " + $('#mf').text());
+
+        // font-size: 3rem;font-family: 'Times New Roman, Symbola, serif'
+        // let rect = new Path.Rectangle(new Point(x,y), new paper.Size(width, height));
+        // rect.fillColor = 'yellow';
+
+        var text = new PointText(new Point(x + width / 2, y + height / 2 + 15));
+        text.justification = 'center';
+        text.fillColor = 'black';
+        text.content = $('#mf').text();
+        text.fontSize = '3em';
+        text.fontFamily = 'Times New Roman, Symbola, serif';
+        $(".edit-text").css('display', 'none');
+        let cloneText = $(".edit-text").clone();
+        $('#mf').text('');
+
+        text.onDoubleClick = function (event) {
+          console.log("  ---------- pointext double clicked called");
+          event.preventDefault();
+        };
 
       });
-      let insertOptions = {placeholder: 'Type Text here'};
-      mf.$insert('Type here', insertOptions);
-    }else {
-      $("#mf").attr('contenteditable', 'true');
-      // $(".edit-text").attr('contenteditable', 'true');
-    }
 
-    $('.edit-text').focusout(function () {
-      console.log('mathfield focus out');
     });
-
-  });
-
+  }
   $(".icon-container").click(function () {
     $(".icon-container").removeClass('active');
     $(this).addClass("active");
   })
 
   $("#free_hand_mode").click(function () {
+    $(document).trigger('mode_changed_v2', {'prev':currentConfig.selectedMode, 'next':Modes.FREEHAND_MODE});
     currentConfig.mode = modes.FREE_HAND;
     currentConfig.selectedMode = Modes.FREEHAND_MODE;
     console.log("free hand mode selected");
@@ -252,6 +289,7 @@
   });
 
   $("#straight_lines_mode").click(function () {
+    $(document).trigger('mode_changed_v2', {'prev':currentConfig.selectedMode, 'next':Modes.LINE_MODE});
     currentConfig.mode = modes.LINES;
     currentConfig.selectedMode = Modes.LINE_MODE;
     console.log("straight line mode selected");
@@ -259,6 +297,7 @@
   });
 
   $("#highlight_mode").click(function () {
+    $(document).trigger('mode_changed_v2', {'prev':currentConfig.selectedMode, 'next':Modes.HIGHLIGHT_MODE});
     currentConfig.mode = modes.HIGHLIGHT;
     currentConfig.selectedMode = Modes.HIGHLIGHT_MODE;
     console.log("highlight  mode selected");
@@ -266,6 +305,7 @@
   });
 
   $("#select_mode").click(function () {
+    $(document).trigger('mode_changed_v2', {'prev':currentConfig.selectedMode, 'next':Modes.SELECTION_MODE});
     currentConfig.mode = modes.SELECT_MODE;
     currentConfig.selectedMode = Modes.SELECTION_MODE;
     console.log("select mode selected");
@@ -276,7 +316,8 @@
     // currentConfig.mode = modes.SELECT_MODE;
     // currentConfig.selectedMode = Modes.SELECTION_MODE;
     console.log("select mode selected");
-    $(document).trigger('pdf_viewer', 'monday_phonics_week_10.pdf');
+    // $(document).trigger('pdf_viewer', 'monday_phonics_week_10.pdf');
+    $(document).trigger('pdf_viewer', 'sp_T1A.pdf');
   });
 
   $("#next").click(function () {
@@ -298,18 +339,18 @@
 
   var imageUrl = "https://i.imgur.com/FY6a4Yv.jpg";
 
-  $( document ).ready(function() {
-    console.log( "ready!" );
+  $(document).ready(function () {
+    console.log("ready!");
 
     // Make sure this code gets executed after the DOM is loaded.
-    $(".searchTerm").keyup( event => {
-      if(event.key !== "Enter") return; // Use `.key` instead.
+    $(".searchTerm").keyup(event => {
+      if (event.key !== "Enter") {
+        return;
+      } // Use `.key` instead.
       $(".searchButton").click(); // Things you want to do.
       event.preventDefault(); // No need to `return false;`.
     });
   });
-
-
 
   $(".searchButton").click(function () {
     let command = $('.searchTerm').val();

@@ -20,6 +20,7 @@ var Point = paper.Point;
 var Rectangle = paper.Rectangle;
 import { Size } from './size.js';
 var Group = paper.Group;
+import { ExpressionParser } from './expression-parser';
 // import Size = paper.Size;
 export class AssistantSketcher {
     executeCommand(command) {
@@ -63,6 +64,15 @@ export class AssistantSketcher {
     _CreateOrFindContext(command) {
         let context = new Context();
         let tokens = command.split(" ");
+        let expression = new ExpressionParser().parse(command);
+        if (expression) {
+            console.log("AssistantSketcher:: expression " + expression);
+            if (expression.toString() == 'clear grid') {
+                // clear the grid and return;
+            }
+            if (expression.toString() == "pizza frac") {
+            }
+        }
         if (context.level == 1) {
             // @ts-ignore
             project.activeLayer.removeChildren();

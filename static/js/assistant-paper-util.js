@@ -53,4 +53,9 @@ export class AssistantPaperUtil {
     this.gridLayer.sendToBack();
     currentLayer.activate();
   }
+
+  clearGrid() {
+    this.gridLayer.remove();
+    this.gridLayer = null;
+  }
 }

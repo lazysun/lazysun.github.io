@@ -17,4 +17,7 @@ export class Config {
     isVisualizationShared() {
         return true;
     }
+    isTextModeEnabledOnDblClick() {
+        return true;
+    }
 }

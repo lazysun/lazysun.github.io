@@ -20,4 +20,9 @@ export class Config {
   public isVisualizationShared():boolean {
     return true;
   }
+
+  public isTextModeEnabledOnDblClick():boolean {
+    return true;
+  }
+
 }

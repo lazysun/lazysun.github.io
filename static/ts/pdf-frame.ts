@@ -74,7 +74,7 @@ export class PdfFrame {
           }
           // @ts-ignore
           let raster = new Raster(document.getElementById("secondCanvas").toDataURL());
-          raster.scale(2);
+          raster.scale(1);
           raster.name = 'pdf';
           // @ts-ignore
           raster.position = view.center;

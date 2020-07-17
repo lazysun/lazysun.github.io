@@ -25,4 +25,8 @@ export class Config {
     return true;
   }
 
+  isGridEnabled() {
+    return false;
+  }
+
 }

@@ -8,7 +8,7 @@ import { Defaults } from '../defaults.js';
 var Group = paper.Group;
 var Size = paper.Size;
 export class SelectionMode {
-    constructor() {
+    constructor(context) {
         this.selectedPath = null;
         this.selectedRect = null;
         this.selectionPoint = null;
@@ -16,6 +16,8 @@ export class SelectionMode {
         this.selectionGroup = null;
         this.selectionRectMode = false;
         this.selectionRectGroup = null;
+        this._selectedPaths = [];
+        this._context = context;
     }
     onMouseDown(state, event) {
         // @ts-ignore
@@ -222,8 +224,17 @@ export class SelectionMode {
         return result ? result.item : null;
     }
     _clearAndSetSelectedPath(selectedItem) {
-        if (this.selectedPath) {
-            this.selectedPath.selected = false;
+        if (!this._context.getSettings().getSelectionConfig().isMultiSelectionEnabled()) {
+            if (this.selectedPath) {
+                console.log("should not get called  ----- 1");
+                this.selectedPath.selected = false;
+            }
+        }
+        else {
+            console.log("this path executed --");
+            if (this.selectedPath) {
+                this._selectedPaths.push(this.selectedPath);
+            }
         }
         this.selectedPath = selectedItem ? selectedItem : null;
         if (this.selectedPath) {
@@ -245,6 +256,7 @@ export class SelectionMode {
                 value.remove();
             });
             removedItems.forEach(function (value, index) {
+                console.log("should not get called  ----- 2");
                 value.selected = false;
                 // @ts-ignore
                 project.activeLayer.addChild(value);
@@ -283,6 +295,11 @@ export class SelectionMode {
                 this.selectedPath.selected = false;
                 this.selectedPath = null;
             }
+            this._selectedPaths.forEach((item) => {
+                console.log("should not get called  ----- 3");
+                item.selected = false;
+            });
+            this._selectedPaths = [];
         }
     }
     onKeyEscape(state, event) {

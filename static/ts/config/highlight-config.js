@@ -1,20 +1,31 @@
 export class HighlightConfig {
+    constructor() {
+        this._borderEnabled = true;
+        this._leaveMarkEnabled = true;
+        this._focusRadius = 60;
+    }
     isCircularFocusEnabled() {
         return true;
     }
+    setFcousRadius(focusRadius) {
+        this._focusRadius = focusRadius;
+    }
     getFocusRadius() {
-        return 60;
+        return this._focusRadius;
     }
     isDragRectEnabled() {
         return false;
     }
     leaveMarkEnabled() {
-        return true;
+        return this._leaveMarkEnabled;
     }
     isBorderEnabled() {
-        return true;
+        return this._borderEnabled;
     }
-    isGridEnabled() {
-        return false;
+    setBorderEnabled(enable) {
+        this._borderEnabled = enable;
+    }
+    setLeaveMark(enable) {
+        this._leaveMarkEnabled = enable;
     }
 }

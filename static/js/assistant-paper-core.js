@@ -20,7 +20,7 @@ window.onload = function () {
 
   var tool = new Tool();
 
-  var context = new Context();
+  context = new Context();
   var currentState = context.getCurrentState();
   let delegator = new ModeDelegator(context);
   let assistantSketcher = new AssistantSketcher();

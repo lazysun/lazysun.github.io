@@ -15,9 +15,9 @@ export class Expression {
   toString(): string {
     let exprString = '';
     this._pieces.forEach((piece)=> {
-      console.log("Expression:: " + piece.getStringValue());
+      // console.log("Expression:: " + piece.getStringValue());
       exprString += (piece.getStringValue() + this._separator);
-      console.log("Expression:: expression till now " + exprString);
+      // console.log("Expression:: expression till now " + exprString);
     });
     return exprString.trim();
   }

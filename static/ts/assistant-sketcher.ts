@@ -23,8 +23,9 @@ import Point = paper.Point;
 import Rectangle = paper.Rectangle;
 import {Size} from './size.js';
 import Group = paper.Group;
-import {ExpressionParser} from './expression-parser';
-import {Expression} from './expression';
+import {ExpressionParser} from './expression-parser.js';
+import {Expression} from './expression.js';
+import {FractionScreen} from './modules/screens/fraction-screen.js';
 // import Size = paper.Size;
 
 export class AssistantSketcher {
@@ -81,8 +82,9 @@ export class AssistantSketcher {
           if(expression.toString() == 'clear grid') {
               // clear the grid and return;
           }
-          if(expression.toString() == "pizza frac") {
-
+          if(expression.toString() == "fraction") {
+            new FractionScreen(expression).draw();
+            return;
           }
         }
         if(context.level == 1) {

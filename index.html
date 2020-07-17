@@ -85,11 +85,11 @@
             <i class="material-icons">picture_as_pdf</i>
           </div>
         </li>
-        <!--        <li>-->
-        <!--          <div class="icon-container">-->
-        <!--            <i class="material-icons">add_circle_outline</i>-->
-        <!--          </div>-->
-        <!--        </li>-->
+                <li>
+                  <div id="slicer_mode" class="icon-container">
+                    <i class="material-icons">add_circle_outline</i>
+                  </div>
+                </li>
 
         <!--        <li>-->
         <!--          <div class="icon-container">-->
@@ -160,10 +160,13 @@
     LINES: 'straight_lines',
     HIGHLIGHT: 'highlight',
     SELECT_MODE: 'select_mode',
-    EDIT_MATH: 'edit_math'
+    SLICER_MODE: 'slicer_mode',
+    EDIT_MATH: 'edit_math',
+    EMPTY_MODE: 'empty_mode'
   }
   let defaultMode = modes.FREE_HAND;
   let currentConfig = new Object();
+  var context = new Object();
   currentConfig.mode = defaultMode;
 
   currentConfig.showGrid = true;
@@ -202,6 +205,8 @@
 <script type="module">
   import './static/js/assistant-paper-core.js';
   import {Modes} from './static/ts/modes/modes.js'
+  // import {Context} from './static/ts/context.js';
+
 
   currentConfig.selectedMode = Modes.FREEHAND_MODE;
   $("#free_hand_mode").addClass("active");
@@ -280,6 +285,14 @@
     $(this).addClass("active");
   })
 
+  $("#slicer_mode").click(function () {
+    $(document).trigger('mode_changed_v2', {'prev':currentConfig.selectedMode, 'next':Modes.SLICER_MODE});
+    currentConfig.mode = modes.FREE_HAND;
+    currentConfig.selectedMode = Modes.SLICER_MODE;
+    console.log("free hand mode selected");
+    $(document).trigger('mode_changed', currentConfig.mode);
+  });
+
   $("#free_hand_mode").click(function () {
     $(document).trigger('mode_changed_v2', {'prev':currentConfig.selectedMode, 'next':Modes.FREEHAND_MODE});
     currentConfig.mode = modes.FREE_HAND;
@@ -301,6 +314,9 @@
     currentConfig.mode = modes.HIGHLIGHT;
     currentConfig.selectedMode = Modes.HIGHLIGHT_MODE;
     console.log("highlight  mode selected");
+    context.getSettings().getHighLightConfig().setBorderEnabled(true);
+    context.getSettings().getHighLightConfig().setLeaveMark(true);
+    context.getSettings().getHighLightConfig().setFcousRadius(60);
     $(document).trigger('mode_changed', currentConfig.mode);
   });
 
@@ -410,6 +426,20 @@
     $(".searchbox").css('background-color', '#f4f6f8');
     console.log("Search button  focusout");
   });
+
+  $(document).bind("sliced", ()=> {
+    $(document).trigger('mode_changed_v2', {'prev':currentConfig.selectedMode, 'next':Modes.EMPTY_MODE});
+    currentConfig.mode = modes.EMPTY_MODE;
+    currentConfig.selectedMode = Modes.EMPTY_MODE;
+    $(document).trigger('mode_changed', currentConfig.mode);
+    $(".icon-container").removeClass('active');
+    // $("#highlight_mode").click();
+    // context.getSettings().getSelectionConfig().setMultiSelectionEnabled(true);
+    // context.getSettings().getHighLightConfig().setBorderEnabled(false);
+    // context.getSettings().getHighLightConfig().setLeaveMark(false);
+    // context.getSettings().getHighLightConfig().setFcousRadius(10);
+  });
+
 </script>
 </body>
 </html>

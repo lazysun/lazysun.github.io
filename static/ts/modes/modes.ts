@@ -3,5 +3,7 @@ export enum Modes {
     LINE_MODE,
     HIGHLIGHT_MODE,
     SELECTION_MODE,
-    TEXT_EDIT
+    TEXT_EDIT,
+    SLICER_MODE,
+    EMPTY_MODE
 }

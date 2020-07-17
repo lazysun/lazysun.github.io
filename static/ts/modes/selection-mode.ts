@@ -13,6 +13,7 @@ import Group = paper.Group;
 import Item = paper.Item;
 import Rectangle = paper.Path.Rectangle;
 import Size = paper.Size;
+import {Context} from '../context.js';
 
 export class SelectionMode implements AssistantMode {
 
@@ -23,6 +24,12 @@ export class SelectionMode implements AssistantMode {
   selectionGroup: Group | null = null;
   selectionRectMode :boolean = false;
   selectionRectGroup:Group|null = null;
+  private _context:Context;
+  private _selectedPaths:Item[] = [];
+
+  constructor(context:Context) {
+    this._context = context;
+  }
 
   onMouseDown(state: Assistant.State, event: paper.Event): void {
     // @ts-ignore
@@ -250,8 +257,18 @@ export class SelectionMode implements AssistantMode {
   }
 
   private _clearAndSetSelectedPath(selectedItem: Item|null):void {
-    if(this.selectedPath) {
-      this.selectedPath.selected = false;
+
+    if(!this._context.getSettings().getSelectionConfig().isMultiSelectionEnabled()) {
+      if (this.selectedPath) {
+        console.log("should not get called  ----- 1");
+        this.selectedPath.selected = false;
+
+      }
+    }else {
+      console.log("this path executed --");
+      if (this.selectedPath) {
+        this._selectedPaths.push(this.selectedPath)
+      }
     }
     this.selectedPath = selectedItem? selectedItem: null;
     if(this.selectedPath) {
@@ -274,6 +291,7 @@ export class SelectionMode implements AssistantMode {
           value.remove();
       });
       removedItems.forEach(function (value, index) {
+        console.log("should not get called  ----- 2");
         value.selected = false;
         // @ts-ignore
         project.activeLayer.addChild(value);
@@ -315,6 +333,11 @@ export class SelectionMode implements AssistantMode {
         this.selectedPath.selected = false;
         this.selectedPath = null;
       }
+      this._selectedPaths.forEach((item)=>{
+        console.log("should not get called  ----- 3");
+        item.selected = false;
+      });
+      this._selectedPaths = []
     }
   }
 

@@ -18,6 +18,9 @@ export class Config {
         return true;
     }
     isTextModeEnabledOnDblClick() {
-        return true;
+        return false;
+    }
+    isGridEnabled() {
+        return false;
     }
 }

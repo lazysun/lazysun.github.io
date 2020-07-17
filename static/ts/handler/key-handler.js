@@ -1,6 +1,6 @@
 export class KeyHandler {
     constructor(context, delegator) {
-        this._debug = true;
+        this._debug = false;
         this._delegator = delegator;
         this._context = context;
     }

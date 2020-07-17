@@ -1,0 +1,109 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" href="./static/css/bootstrap.css"></link>
+<link th:href="@{/css/bootstrap-grid.css}" rel="stylesheet"
+      href="./static/css/bootstrap-grid.css"></link>
+<link th:href="@{/css/bootstrap-reboot.css}" rel="stylesheet"
+      href="./static/css/bootstrap-reboot.css"></link>
+<link th:href="@{/css/assistant.css}" rel="stylesheet" href="../static/css/assistant.css"></link>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!--<script type="text/x-mathjax-config">-->
+<!--  MathJax.Hub.Config({-->
+<!--    extensions: ["tex2jax.js"],-->
+<!--    jax: ["input/TeX", "output/HTML-CSS"],-->
+<!--    tex2jax: {-->
+<!--      inlineMath: [ ['$','$'], ["\\(","\\)"] ],-->
+<!--      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],-->
+<!--      processEscapes: true-->
+<!--    },-->
+<!--    "HTML-CSS": { fonts: ["TeX"] }-->
+<!--  });-->
+<!--</script>-->
+<!--<script type="text/javascript" async-->
+<!--        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>-->
+
+<script id="MathJax-script"  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<script>
+
+   $(document).ready(function () {
+     convert();
+   });
+  function convert() {
+    //
+    //  Get the TeX input
+    //
+    var input = "1\\over2";
+    //
+    //  Disable the display and render buttons until MathJax is done
+    //
+
+    var button = document.getElementById("render");
+
+    //  Clear the old output
+    //
+    output = document.getElementById('output');
+    output.innerHTML = '';
+    //
+    //  Reset the tex labels (and automatic equation numbers, though there aren't any here).
+    //  Get the conversion options (metrics and display settings)
+    //  Convert the input to SVG output and use a promise to wait for it to be ready
+    //    (in case an extension needs to be loaded dynamically).
+    //
+    MathJax.texReset();
+    var options = MathJax.getMetricsFor(output);
+    options.display = true;
+    const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
+    console.log(svg);
+    MathJax.tex2svgPromise(input, options).then(function (node) {
+      //
+      //  The promise returns the typeset node, which we add to the output
+      //  Then update the document to include the adjusted CSS for the
+      //    content of the new equation.
+      //
+      output.appendChild(node);
+      MathJax.startup.document.clear();
+      MathJax.startup.document.updateDocument();
+    }).catch(function (err) {
+      //
+      //  If there was an error, put the message into the output instead
+      //
+      output.appendChild(document.createElement('pre')).appendChild(document.createTextNode(err.message));
+    }).then(function () {
+      //
+      //  Error or not, re-enable the display and render buttons
+      //
+      // button.disabled = display.disabled = false;
+    });
+  }
+
+
+</script>
+<script th:src="@{/js/paper-full.js}" src="../static/js/paper-full.js"></script>
+<script type="module">
+  import '../static/js/assistant-paper-core.js';
+  // import {Modes} from '../static/ts/modes/modes.js'
+  // let currentConfig = new Object();
+  // currentConfig.selectedMode = Modes.FREEHAND_MODE;
+</script>
+
+</head>
+<body>
+
+<div class="right">
+  <input type="button" value="Render TeX" id="render" onclick="convert()" />
+</div>
+<br clear="all" />
+<div id="output"></div>
+</body>
+</html>

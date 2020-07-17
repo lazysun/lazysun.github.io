@@ -4,7 +4,7 @@ import Event = paper.Event;
 
 export class KeyHandler {
 
-  private _debug:boolean = true;
+  private _debug:boolean = false;
   private _delegator:ModeDelegator;
   private _context:Context;
 

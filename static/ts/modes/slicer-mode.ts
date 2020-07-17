@@ -189,6 +189,22 @@ export class SlicerMode implements AssistantMode {
             p.selected = p.selected ? false : true;
             // @ts-ignore
             $(document).trigger("sliced-selection");
+
+
+            if(p.selected) {
+              p.data.fillColor = p.fillColor;
+              p.fillColor  = new Color('#e14436')
+              // p.fillColor = new Color({
+              //   gradient: {
+              //     stops: [['#f8cece', 0.05], ['#e14436', 0.2], ['#e7a09a', 1]],
+              //     radial: true
+              //   },
+              //   origin: p.position,
+              //   destination: p.bounds.rightCenter
+              // });
+            }else {
+              p.fillColor = p.data.fillColor;
+            }
           };
           p.onMouseDrag = (event: Event) => {
             if (p.selected) {

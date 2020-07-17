@@ -38,7 +38,18 @@ export class PizzaBlock implements Block{
     let center = this.box.getCenter();
     let radius = Math.min(this.box.getSize().getWidth(), this.box.getSize().getHeight())/2;
     let myCircle = new Path.Circle(center, radius);
-    myCircle.fillColor = new Color('#f5de9b')
+    // myCircle.fillColor = new Color('#f5de9b');
+    myCircle.fillColor = new Color({
+      gradient: {
+        stops: [['#edd20a', 0.2], ['#f8bb0c', 0.6],['#ed740e', 0.9], ['#e14436', 1]],
+
+        radial: true
+      },
+      origin: myCircle.position,
+      destination: myCircle.bounds.rightCenter
+    });
+
+    //#edd20a, #ec1818
     myCircle.data.member = true;
     this._group.addChild(myCircle);
   }

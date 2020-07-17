@@ -195,6 +195,19 @@
     offset: [0, 20],
   });
 
+  tippy('#slicer_mode', {
+    content: 'Slice Objects through!',
+    placement: 'right',
+    offset: [0, 20],
+  });
+
+  tippy('#pdf_viewer', {
+    content: 'Upload pdf!',
+    placement: 'right',
+    offset: [0, 20],
+  });
+
+
   $(document).bind('pagination', function (event, pageInfo) {
     console.log("Hurray  " + pageInfo);
     $(".bottom-panel").css('display', 'block');

@@ -30,7 +30,21 @@
 </head>
 
 <body style="overflow: hidden">
-<img src="./static/images/apple.jpeg" id="apple" style="display: none">
+<img src="static/images/apple2.jpeg" id="apple2" style="display: none">
+<img src="./static/images/dino.png" id="dino" style="display: none">
+<img src="./static/images/balloon.png" id="balloon" style="display: none">
+<img src="./static/images/bell.png" id="bell" style="display: none">
+<img src="./static/images/bird.png" id="bird" style="display: none">
+<img src="./static/images/cat.png" id="cat" style="display: none">
+<img src="./static/images/coin.png" id="coin" style="display: none">
+<img src="./static/images/kite.png" id="kite" style="display: none">
+<img src="./static/images/hotdog.png" id="hotdog" style="display: none">
+<img src="./static/images/lion.png" id="lion" style="display: none">
+<img src="./static/images/rose.png" id="rose" style="display: none">
+<img src="./static/images/shark.png" id="shark" style="display: none">
+<img src="./static/images/trex.png" id="trex" style="display: none">
+<img src="./static/images/whale.png" id="whale" style="display: none">
+<img src="./static/images/apple2.png" id="apple" style="display: none">
 <!--<body>-->
 <div class="container-fluid">
   <div class="row">
@@ -87,9 +101,15 @@
         </li>
                 <li>
                   <div id="slicer_mode" class="icon-container">
-                    <i class="material-icons">add_circle_outline</i>
+                    <i class="material-icons">content_cut</i>
                   </div>
                 </li>
+
+        <li>
+          <div id="empty_mode" class="icon-container">
+            <i class="material-icons">highlight_alt</i>
+          </div>
+        </li>
 
         <!--        <li>-->
         <!--          <div class="icon-container">-->
@@ -151,7 +171,7 @@
 <script src="./static/js/algebra-0.2.6.min.js"></script>
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
-<script src="https://unpkg.com/mathlive/dist/mathlive.js"></script>
+<!--<script src="https://unpkg.com/mathlive/dist/mathlive.js"></script>-->
 
 <script>
   <!--All the defaults and constants goes here-->
@@ -298,6 +318,15 @@
     $(this).addClass("active");
   })
 
+  $("#empty_mode").click(function () {
+    $(document).trigger('mode_changed_v2', {'prev':currentConfig.selectedMode, 'next':Modes.EMPTY_MODE});
+    currentConfig.mode = modes.EMPTY_MODE;
+    currentConfig.selectedMode = Modes.EMPTY_MODE;
+    console.log("empty  mode selected");
+    $(document).trigger('mode_changed', currentConfig.mode);
+  });
+
+
   $("#slicer_mode").click(function () {
     $(document).trigger('mode_changed_v2', {'prev':currentConfig.selectedMode, 'next':Modes.SLICER_MODE});
     currentConfig.mode = modes.FREE_HAND;
@@ -327,9 +356,9 @@
     currentConfig.mode = modes.HIGHLIGHT;
     currentConfig.selectedMode = Modes.HIGHLIGHT_MODE;
     console.log("highlight  mode selected");
-    context.getSettings().getHighLightConfig().setBorderEnabled(true);
-    context.getSettings().getHighLightConfig().setLeaveMark(true);
-    context.getSettings().getHighLightConfig().setFcousRadius(60);
+    context.getSettings().getHighLightConfig().setBorderEnabled(false);
+    context.getSettings().getHighLightConfig().setLeaveMark(false);
+    context.getSettings().getHighLightConfig().setFcousRadius(40);
     $(document).trigger('mode_changed', currentConfig.mode);
   });
 

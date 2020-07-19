@@ -94,7 +94,7 @@ export class ImageBlock {
             console.log("Not drawing the dirty text block with text : " + this.text);
             return;
         }
-        if (this.count > 1) {
+        if (this.count > 0) {
             let startY = this._topBottomBorderPadding + this.box.getTopLeft().y;
             let countTillNow = 0;
             for (let y = 0; y < this._rows; y++) {
@@ -108,7 +108,7 @@ export class ImageBlock {
                     //   fillColor: '#f8bb0c'
                     // });
                     let radius = this._isSharedRadiusSet() ? this._sharedRadius : this.getRadius();
-                    let raster = new Raster('apple');
+                    let raster = new Raster(this.imagePath);
                     raster.position = new Point(startX + (this._singleImageSize.getWidth() / 2), startY + (this._singleImageSize.getHeight() / 2));
                     raster.size = new paper.Size(radius * 2, radius * 2);
                     this._group.addChild(raster);

@@ -91,6 +91,8 @@ export class AssistantSketcher {
           // @ts-ignore
           project.activeLayer.removeChildren();
             let commandObj:Command  = new CommandParser().parse(command);
+            let expressionObj:Expression|null = new ExpressionParser().parse(command);
+            let usingAttrVal:string = expressionObj?expressionObj.getUsingAttrValue():'apple';
             context.screenType = ScreenType.ADDITION;
             let blockLayer:BlockLayer = new BlockLayer();
             let vizBlocks:Block[] = [];
@@ -99,7 +101,7 @@ export class AssistantSketcher {
             commandObj.params.forEach((commandParam:CommandParam) => {
               let block:Block = TextBlock.CreateTextBlock(commandParam.getStringValue());
               if(commandParam.isNumeric() && context.getSettings().getConfig().isVisualizationEnabledByDefault()) {
-                let imageBlock: ImageBlock = ImageBlock.CreateImageBlock(new Size(200,200),commandParam.getNumericValue());
+                let imageBlock: ImageBlock = ImageBlock.CreateImageBlock(new Size(200,200),commandParam.getNumericValue(), usingAttrVal);
                 let groupBlock = new GroupBlock(Layout.VERTICAL);
                 groupBlock.addBlock(block);
                 groupBlock.addBlock(imageBlock);
@@ -123,7 +125,9 @@ export class AssistantSketcher {
             // let topLeftPoint = new Point(viewRect.size.width/3, 0);
             let topLeftPoint = new Point(0, 0);
             // let width = viewRect.size.width - topLeftPoint.x;
-          let width = viewRect.size.width*2/3;
+          // let width = viewRect.size.width*2/3;
+
+          let width = viewRect.size.width;
             // let height = viewRect.size.height - topLeftPoint.y;
           let height = viewRect.size.height - topLeftPoint.y;
             let rect:Rectangle = new Rectangle(topLeftPoint, new paper.Size(width, height))

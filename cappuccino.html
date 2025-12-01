@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversion Page</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GOOGLE_TAG_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // This line sets up the tag. 
+      // For GA4, it automatically fires a 'page_view'.
+      // For Google Ads, it enables remarketing/conversion linking.
+      gtag('config', 'YOUR_GOOGLE_TAG_ID'); 
+
+      // OPTIONAL: If this is a specific Google Ads Conversion (e.g., "Thank You" page)
+      // Uncomment the line below and replace with your Conversion Label
+      // gtag('event', 'conversion', {'send_to': 'YOUR_GOOGLE_TAG_ID/YOUR_CONVERSION_LABEL'});
+    </script>
+
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      
+      // This initializes the pixel with your ID
+      fbq('init', 'YOUR_FACEBOOK_PIXEL_ID');
+      
+      // This line explicitly fires the "PageView" event immediately on load
+      fbq('track', 'PageView');
+    </script>
+    
+    <noscript>
+      <img height="1" width="1" style="display:none" 
+           src="https://www.facebook.com/tr?id=YOUR_FACEBOOK_PIXEL_ID&ev=PageView&noscript=1"/>
+    </noscript>
+
+</head>
+<body>
+
+    <h1>Conversion Successful</h1>
+    <p>The tracking codes in the head of this page have fired.</p>
+
+</body>
+</html>

@@ -3,22 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversion Page</title>
+    <title>Conversion Page with Performance Monitor</title>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GOOGLE_TAG_ID"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
-      // This line sets up the tag. 
-      // For GA4, it automatically fires a 'page_view'.
-      // For Google Ads, it enables remarketing/conversion linking.
-      gtag('config', 'YOUR_GOOGLE_TAG_ID'); 
-
-      // OPTIONAL: If this is a specific Google Ads Conversion (e.g., "Thank You" page)
-      // Uncomment the line below and replace with your Conversion Label
-      // gtag('event', 'conversion', {'send_to': 'YOUR_GOOGLE_TAG_ID/YOUR_CONVERSION_LABEL'});
+      gtag('config', 'YOUR_GOOGLE_TAG_ID');
     </script>
 
     <script>
@@ -31,23 +23,77 @@
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
       
-      // This initializes the pixel with your ID
       fbq('init', 'YOUR_FACEBOOK_PIXEL_ID');
-      
-      // This line explicitly fires the "PageView" event immediately on load
       fbq('track', 'PageView');
     </script>
-    
     <noscript>
       <img height="1" width="1" style="display:none" 
            src="https://www.facebook.com/tr?id=YOUR_FACEBOOK_PIXEL_ID&ev=PageView&noscript=1"/>
     </noscript>
-
+    
+    <style>
+        /* Simple styling for the debug box */
+        #debug-panel {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+            font-family: monospace;
+        }
+        .found { color: green; font-weight: bold; }
+    </style>
 </head>
 <body>
 
-    <h1>Conversion Successful</h1>
-    <p>The tracking codes in the head of this page have fired.</p>
+    <h1>Conversion & Performance Test Page</h1>
+    <p>The system is monitoring network requests for Google and Facebook tags...</p>
+
+    <div id="debug-panel">
+        <h3>Performance API Log:</h3>
+        <ul id="request-log"></ul>
+    </div>
+
+    <script>
+        // formatting helper
+        const logList = document.getElementById('request-log');
+        function logMessage(msg, isMatch) {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            if (isMatch) li.className = 'found';
+            logList.appendChild(li);
+        }
+
+        // Define the domains we want to watch for
+        const targets = ['googletagmanager.com', 'facebook.net'];
+
+        // Create a PerformanceObserver to watch for "resource" entries
+        // This detects scripts, images, and fetch/xhr requests
+        const observer = new PerformanceObserver((list) => {
+            list.getEntries().forEach((entry) => {
+                
+                // Check if the entry URL contains our target domains
+                targets.forEach(domain => {
+                    if (entry.name.includes(domain)) {
+                        logMessage(`[DETECTED] Request made to: ${domain}`, true);
+                        console.log('Full URL:', entry.name); // Log full details to console
+                    }
+                });
+
+            });
+        });
+
+        // Start observing. 
+        // buffered: true is CRITICAL. It ensures we catch requests 
+        // that happened before this script loaded.
+        observer.observe({ type: 'resource', buffered: true });
+        
+        // Optional: Notify if nothing is found after a few seconds
+        setTimeout(() => {
+            if (logList.children.length === 0) {
+                logMessage("No matching requests detected yet.", false);
+            }
+        }, 3000);
+    </script>
 
 </body>
 </html>

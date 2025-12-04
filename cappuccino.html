@@ -95,5 +95,40 @@
         }, 3000);
     </script>
 
+    <div class="counter-box">
+        Current Count: <span id="count-display">Loading...</span>
+    </div>
+
+    <script>
+        // 1. Define the key we will use in LocalStorage
+        const STORAGE_KEY = 'userCounter';
+
+        // 2. Select the HTML element where we will show the number
+        const displayElement = document.getElementById('count-display');
+
+        // 3. Get the current value from LocalStorage
+        // Note: LocalStorage always returns a String or null
+        let storedValue = localStorage.getItem(STORAGE_KEY);
+
+        let finalCount;
+
+        // 4. Check logic: Does the counter exist?
+        if (storedValue === null) {
+            // CASE A: Counter does not exist yet
+            finalCount = 0;
+        } else {
+            // CASE B: Counter exists
+            // We must convert the string back to a number to do math
+            finalCount = parseInt(storedValue) + 1;
+        }
+
+        // 5. Update the display in the HTML
+        displayElement.innerText = finalCount;
+
+        // 6. Save the new value back to LocalStorage
+        localStorage.setItem(STORAGE_KEY, finalCount);
+        
+        console.log(`Counter updated to: ${finalCount}`);
+    </script>
 </body>
 </html>

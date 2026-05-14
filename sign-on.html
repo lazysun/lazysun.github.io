@@ -79,7 +79,7 @@
 
      function handleSilentResponse(response) {
        try 
-      const jwtPayload = decodeJwt(response.credential);
+      let jwtPayload = decodeJwt(response.credential);
       console.log("User email is" : jwtPayload.email);
        catch(e) {
         console.error(e);

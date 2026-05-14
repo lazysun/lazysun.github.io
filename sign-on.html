@@ -77,6 +77,15 @@
       updateUI(jwtPayload.name, jwtPayload.email, 'Google');
     }
 
+     function handleSilentResponse(response) {
+       try 
+      const jwtPayload = decodeJwt(response.credential);
+      console.log("User email is" : jwtPayload.email);
+       catch(e) {
+        console.error(e);
+       }
+    }
+
     // Pure JS helper to decode base64url JWT payloads without external modules
     function decodeJwt(token) {
       const base64Url = token.split('.')[1];
